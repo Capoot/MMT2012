@@ -4,3 +4,4 @@
 VideoServer/bin
 .idea*
 *.iml
+out

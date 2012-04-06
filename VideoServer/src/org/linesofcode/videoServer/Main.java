@@ -1,8 +1,8 @@
 package org.linesofcode.videoServer;
 
-import java.io.IOException;
-
 import org.apache.log4j.Logger;
+
+import java.io.IOException;
 
 public class Main {
 
@@ -12,25 +12,29 @@ public class Main {
 		
 		final VideoServer videoServer = new VideoServer();
 		evalArgs(args, videoServer);
-		Runtime.getRuntime().addShutdownHook(new Thread() {
-			@Override
-			public void run() {
-				try {
-					videoServer.shutDown();
-				} catch (IOException e) {
-					LOG.error("Error while shutting down server: " + e);
-				}
-			}
-		});
-		
-		try {
+        addShutdownHook(videoServer);
+
+        try {
 			videoServer.start();
 		} catch (IOException e) {
-			LOG.error("Startup failed: " + e);
+			LOG.error("Startup failed.", e);
 		}
 	}
 
-	private static void evalArgs(String[] args, VideoServer videoServer) {
+    private static void addShutdownHook(final VideoServer videoServer) {
+        Runtime.getRuntime().addShutdownHook(new Thread() {
+            @Override
+            public void run() {
+                try {
+                    videoServer.shutDown();
+                } catch (IOException e) {
+                    LOG.error("Error while shutting down server.",  e);
+                }
+            }
+        });
+    }
+
+    private static void evalArgs(String[] args, VideoServer videoServer) {
 		// TODO evaluate arguments here
 	}
 	

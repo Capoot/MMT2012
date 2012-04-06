@@ -1,17 +1,17 @@
 package org.linesofcode.videoServer;
 
+import org.apache.log4j.Logger;
+
 import java.io.FileNotFoundException;
 import java.io.IOException;
 import java.io.InputStream;
 import java.util.Properties;
 
-import org.apache.log4j.Logger;
-
 public class VideoServer {
 	
 	private static final Logger LOG = Logger.getLogger(VideoServer.class);
 	
-	private Properties properties = new Properties();
+	private final Properties properties = new Properties();
 	
 	private Receiver receiver;
 	private Broadcaster broadcaster;
@@ -28,9 +28,9 @@ public class VideoServer {
 
 	private void readProperties() throws IOException {
 		
-		Class<?> c = VideoServer.class;
+		final Class<?> c = VideoServer.class;
 		final String path = "server.properties";
-		InputStream in = c.getClassLoader().getResourceAsStream(path);
+		final InputStream in = c.getClassLoader().getResourceAsStream(path);
 		
 		if(in == null) {
 			throw new FileNotFoundException(path);
