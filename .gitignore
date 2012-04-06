@@ -2,3 +2,5 @@
 .metadata
 .classpath
 VideoServer/bin
+.idea*
+*.iml
