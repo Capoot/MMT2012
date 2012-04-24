@@ -40,6 +40,7 @@ App.prototype.showPosition = function(lat, lng) {
     var latlng = new google.maps.LatLng(lat, lng);
     this.userLocation = latlng;
     this.map.setCenter(latlng);
+    this.map.setZoom(12);
 }
 
 App.prototype.addCamera = function(id) {
