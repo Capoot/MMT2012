@@ -8,6 +8,15 @@
     <script type="text/javascript" src="script/map.js"></script>
 </head>
 <body>
-    <div id="map_canvas"></div>
+<div id="infoWindow">
+    <h1>LiveStream</h1>
+    <video autoplay="autoplay">
+        <source src="testData/video.webm" type="video/webm" />
+        <source src="testData/video.mp4" type="video/mp4" />
+        <source src="testData/video.webm" type="video/ogg; codecs=\'theora, vobis\'" />
+    </video>
+    <button class="videoClose">close</button>
+</div>
+<div id="map_canvas"></div>
 </body>
 </html>
