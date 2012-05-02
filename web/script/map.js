@@ -66,19 +66,6 @@ App.prototype.openInfoWindow = function() {
         + '</video>'
         + '<button class="videoClose">close</button>';
 
-    var myOptions = {
-        zoom: 13,
-        center: new google.maps.LatLng(52, 13),
-        mapTypeId: google.maps.MapTypeId.ROADMAP,
-        disableDefaultUI: true,
-        scaleControl: false,
-        zoomControl: false,
-        panControl: false
-    };
-
-    var map = this.map;
-    map.setOptions(myOptions);
-
     infoWindow = $('#infoWindow');
     infoWindow.html(info);
     infoWindow.removeClass('top');
