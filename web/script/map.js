@@ -23,6 +23,7 @@ var App = function() {
     this.map = new google.maps.Map(document.getElementById("map_canvas"), myOptions);
     this.showUserOnMap();
 
+    this.tick();
     var that = this;
     window.setInterval(function() {
         that.tick();
@@ -32,15 +33,23 @@ var App = function() {
 App.prototype.tick = function() {
     var that = this;
     jQuery.getJSON("testData/cameras.json", function(data) {
+
+        $.each(that.cameras, function(id, vals) {
+            vals.dirty = true;
+        });
+
         $.each(data, function(id, geo) {
             that.updateCamera(id, geo.lat, geo.lng);
         });
+
+        $.each(that.cameras, function(id, vals) {
+            if (vals.dirty) {
+                vals.setMap(null);
+                delete that.cameras[id];
+            }
+        });
     });
 };
-
-App.prototype.tickUpdate = function (data) {
-
-}
 
 App.prototype.showUserOnMap = function() {
     var self = this;
@@ -61,16 +70,19 @@ App.prototype.showPosition = function(lat, lng) {
 
 App.prototype.updateCamera = function(id, lat, lng) {
 
-    var marker = new google.maps.Marker({
-        position: new google.maps.LatLng(lat, lng),
-        title:"Camera " + id,
-        map: this.map,
-        icon: "img/video.png"
-    });
-
-    google.maps.event.addListener(marker, 'click', this.openInfoWindow);
-
-    this.cameras[id] = marker;
+    if (this.cameras[id] != undefined) {
+        this.cameras[id].setPosition(new google.maps.LatLng(lat, lng));
+    } else {
+        var marker = new google.maps.Marker({
+            position: new google.maps.LatLng(lat, lng),
+            title:"Camera " + id,
+            map: this.map,
+            icon: "img/video.png"
+        });
+        google.maps.event.addListener(marker, 'click', this.openInfoWindow);
+        this.cameras[id] = marker;
+    }
+    this.cameras[id].dirty = false;
 };
 
 App.prototype.openInfoWindow = function() {
@@ -97,7 +109,6 @@ App.prototype.openInfoWindow = function() {
     });
     $('.videoClose').click(function() {
         infoWindow.hide();
-
     });
 };
 
