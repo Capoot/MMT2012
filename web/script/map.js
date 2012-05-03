@@ -7,7 +7,6 @@ $(document).ready(function (){
 var App = function() {
     this.map = null;
     this.initialLocation = new google.maps.LatLng(52, 13);
-    this.userLocation = null;
     this.cameras = {};
     this.infoWindow = null;
 
@@ -23,8 +22,25 @@ var App = function() {
 
     this.map = new google.maps.Map(document.getElementById("map_canvas"), myOptions);
     this.showUserOnMap();
-    this.addCamera(123);
+
+    var that = this;
+    window.setInterval(function() {
+        that.tick();
+    }, 5000);
 };
+
+App.prototype.tick = function() {
+    var that = this;
+    jQuery.getJSON("testData/cameras.json", function(data) {
+        $.each(data, function(id, geo) {
+            that.updateCamera(id, geo.lat, geo.lng);
+        });
+    });
+};
+
+App.prototype.tickUpdate = function (data) {
+
+}
 
 App.prototype.showUserOnMap = function() {
     var self = this;
@@ -43,11 +59,11 @@ App.prototype.showPosition = function(lat, lng) {
     this.map.setZoom(12);
 };
 
-App.prototype.addCamera = function(id) {
+App.prototype.updateCamera = function(id, lat, lng) {
 
     var marker = new google.maps.Marker({
-        position: new google.maps.LatLng(52, 13),
-        title:"Camera ###",
+        position: new google.maps.LatLng(lat, lng),
+        title:"Camera " + id,
         map: this.map,
         icon: "img/video.png"
     });
