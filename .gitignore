@@ -5,3 +5,4 @@ VideoServer/bin
 .idea*
 *.iml
 out
+.settings

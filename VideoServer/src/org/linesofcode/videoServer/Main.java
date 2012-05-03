@@ -1,6 +1,8 @@
 package org.linesofcode.videoServer;
 
 import org.apache.log4j.Logger;
+import org.springframework.context.ApplicationContext;
+import org.springframework.context.support.ClassPathXmlApplicationContext;
 
 import java.io.IOException;
 
@@ -9,8 +11,8 @@ public class Main {
 	private static final Logger LOG = Logger.getLogger(Main.class);
 	
 	public static void main(String[] args) {
-		
-		final VideoServer videoServer = new VideoServer();
+		ApplicationContext context = new ClassPathXmlApplicationContext(new String[]{"applicationContext.xml"});
+		final VideoServer videoServer = context.getBean("videoServer", VideoServer.class);
 		evalArgs(args, videoServer);
         addShutdownHook(videoServer);
 

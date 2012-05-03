@@ -1,4 +1,4 @@
-package org.linesofcode.videoServer;
+package org.linesofcode.videoServer.receive;
 
 public interface Receiver {
 

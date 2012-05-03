@@ -1,4 +1,4 @@
-package org.linesofcode.videoServer;
+package org.linesofcode.videoServer.broadcast;
 
 import java.io.IOException;
 

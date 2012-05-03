@@ -1,6 +1,8 @@
 package org.linesofcode.videoServer;
 
 import org.apache.log4j.Logger;
+import org.linesofcode.videoServer.broadcast.Broadcaster;
+import org.linesofcode.videoServer.receive.Receiver;
 
 import java.io.FileNotFoundException;
 import java.io.IOException;
@@ -16,12 +18,14 @@ public class VideoServer {
 	private Receiver receiver;
 	private Broadcaster broadcaster;
 	
+	public VideoServer(Receiver receiver, Broadcaster broadcaster) {
+		this.receiver = receiver;
+		this.broadcaster = broadcaster;
+	}
+	
 	public void start() throws IOException {
 		readProperties();
-		broadcaster = new HttpBroadcaster(
-				Integer.parseInt(properties.getProperty("httpPort")),
-				properties.getProperty("httpContextRoot"));
-//		receiver.initialize();
+		receiver.initialize();
 		broadcaster.initialize();
 		LOG.info("Server launched successfully");
 	}
