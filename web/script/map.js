@@ -58,19 +58,27 @@ App.prototype.addCamera = function(id) {
 };
 
 App.prototype.openInfoWindow = function() {
-    var info = '<h1>LiveStream</h1>'
-        + '<video autoplay="autoplay">'
-        + '<source src="testData/video.webm" type="video/webm" />'
-        + '<source src="testData/video.mp4" type="video/mp4" />'
-        + '<source src="testData/video.webm" type="video/ogg; codecs=\'theora, vobis\'" />'
-        + '</video>'
-        + '<button class="videoClose">close</button>';
-
     infoWindow = $('#infoWindow');
-    infoWindow.html(info);
     infoWindow.removeClass('top');
     infoWindow.addClass('right');
     infoWindow.show();
+
+
+    flowplayer("player", "script/flowplayer-3.2.10.swf", {
+        debug: true,
+        clip: {
+
+            provider: 'mapStream',
+            url: 'metacafe'
+        },
+
+        plugins: {
+            mapStream: {
+                url: "flowplayer.rtmp-3.2.9.swf",
+                netConnectionUrl: 'rtmp://s3b78u0kbtx79q.cloudfront.net/cfx/st'
+            }
+        }
+    });
     $('.videoClose').click(function() {
         infoWindow.hide();
 
