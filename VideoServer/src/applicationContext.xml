@@ -9,9 +9,13 @@
 	</bean>
 	
 	<bean id="dummyReceiver" class="org.linesofcode.videoServer.receive.DummyReceiver" />
+	
+	<bean id="webService" class="org.linesofcode.videoServer.webService.HttpWebService" >
+		<property name="httpContextName" value="/videos" />
+		<property name="port" value="8080" />
+	</bean>
 
 	<bean id="videoServer" class="org.linesofcode.videoServer.VideoServer">
-		<constructor-arg index="0" ref="dummyReceiver" />
-		<constructor-arg index="1" ref="rtpBroadcaster" />
+		<constructor-arg index="0" ref="webService" />
 	</bean>
 </beans>
