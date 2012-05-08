@@ -45,7 +45,7 @@ public class HttpWebService implements WebService, HttpHandler {
 		server.createContext(httpContextName, this);
 		server.setExecutor(Executors.newCachedThreadPool());
 		
-		LOG.info("Launching Http Web Service at port " + address.getPort() + ", context root: " + httpContextName + "...");
+		LOG.info("Launching Http Web Service at port " + address.getPort() + ", context root: " + httpContextName);
 	    server.start();
 	    
 	    // FIXME this is testdata
@@ -67,8 +67,19 @@ public class HttpWebService implements WebService, HttpHandler {
 			return;
 		}
 		
+		try {
+			processRequest(e);
+		}catch(IOException ex) {
+			LOG.error("I/O Error while handling HTTP Request: " + ex.getMessage());
+			throw ex;
+		} catch(Exception ex) {
+			LOG.error("Unexpected error while handling HTTP Request: " + ex);
+		}
+	}
+
+	private void processRequest(HttpExchange e) throws IOException {
 		sendHeaders(e);
-		sendJsonVideoList(e);
+		sendBody(e);
 		e.close();
 	}
 
@@ -79,7 +90,7 @@ public class HttpWebService implements WebService, HttpHandler {
 		e.sendResponseHeaders(200, 0);
 	}
 
-	private void sendJsonVideoList(HttpExchange e) throws IOException {
+	private void sendBody(HttpExchange e) throws IOException {
 		
 		OutputStreamWriter writer = new OutputStreamWriter(e.getResponseBody(), responseEncoding);
 		PrintWriter out = new PrintWriter(writer, true);
