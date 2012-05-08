@@ -32,7 +32,7 @@ var App = function() {
 
 App.prototype.tick = function() {
     var that = this;
-    jQuery.getJSON("testData/cameras.json", function(data) {
+    jQuery.getJSON("http://localhost:8081/videos", function(data) {
 
         $.each(that.cameras, function(id, vals) {
             vals.dirty = true;

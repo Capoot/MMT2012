@@ -12,7 +12,8 @@
 	
 	<bean id="webService" class="org.linesofcode.videoServer.webService.HttpWebService" >
 		<property name="httpContextName" value="/videos" />
-		<property name="port" value="8080" />
+		<property name="port" value="8081" />
+		<property name="responseEncoding" value="UTF-8" />
 	</bean>
 
 	<bean id="videoServer" class="org.linesofcode.videoServer.VideoServer">
