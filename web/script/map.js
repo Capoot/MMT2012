@@ -96,16 +96,16 @@ App.prototype.openInfoWindow = function() {
         debug: true,
         clip: {
 
-            provider: 'mapStream',
-            url: 'metacafe'
-        },
+            //provider: 'mapStream',
+            url: 'http://127.0.0.1/mmt/testData/video.webm'
+        }
 
-        plugins: {
+        /*plugins: {
             mapStream: {
                 url: "flowplayer.rtmp-3.2.9.swf",
                 netConnectionUrl: 'rtmp://s3b78u0kbtx79q.cloudfront.net/cfx/st'
             }
-        }
+        }*/
     });
     $('.videoClose').click(function() {
         infoWindow.hide();
