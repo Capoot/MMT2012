@@ -103,7 +103,7 @@ App.prototype.openInfoWindow = function() {
         plugins: {
             mapStream: {
                 url: "flowplayer.rtmp-3.2.9.swf",
-                netConnectionUrl: 'rtmp://s3b78u0kbtx79q.cloudfront.net/cfx/st'
+                netConnectionUrl: 'http://localhost/web/testData/video.mp4'
             }
         }
     });

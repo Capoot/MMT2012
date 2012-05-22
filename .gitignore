@@ -6,3 +6,4 @@ VideoServer/bin
 *.iml
 out
 .settings
+*.swp

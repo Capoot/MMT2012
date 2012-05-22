@@ -1,33 +1,35 @@
 package org.linesofcode.videoServer.webService;
 
 import java.io.IOException;
-import java.io.OutputStreamWriter;
-import java.io.PrintWriter;
 import java.net.InetSocketAddress;
 import java.util.HashMap;
 import java.util.Map;
-import java.util.Set;
 import java.util.concurrent.Executors;
 
 import org.apache.log4j.Logger;
 import org.linesofcode.videoServer.Broadcast;
 
-import com.sun.net.httpserver.HttpExchange;
-import com.sun.net.httpserver.HttpHandler;
 import com.sun.net.httpserver.HttpServer;
 
-public class HttpWebService implements WebService, HttpHandler {
+public class HttpWebService implements WebService {
 
 	private static final Logger LOG = Logger.getLogger(HttpWebService.class);
 	
 	private HttpServer server;
 	private InetSocketAddress address;
-	private String httpContextName;
+	private String listContextName;
 	private int port;
-	private String responseEncoding;
+	private String hostName;
+	private VideoListHandler videoListHandler;
+	
+	private String videoPath; // FIXME das soll woanders hin
 	
 	private Map<String, Broadcast> casts = new HashMap<String, Broadcast>();
 
+	public HttpWebService(VideoListHandler videoListHandler) {
+		this.videoListHandler = videoListHandler;
+	}
+	
 	@Override
 	public void addCast(Broadcast cast) {
 		casts.put(cast.getId(), cast);
@@ -40,16 +42,24 @@ public class HttpWebService implements WebService, HttpHandler {
 
 	@Override
 	public void start() throws IOException {
+		
+		initHandlers();
+		
 		address = new InetSocketAddress(port);
 		server = HttpServer.create(address, 0);
-		server.createContext(httpContextName, this);
+		server.createContext(listContextName, videoListHandler);
 		server.setExecutor(Executors.newCachedThreadPool());
 		
-		LOG.info("Launching Http Web Service at port " + address.getPort() + ", context root: " + httpContextName);
+		LOG.info("Launching Http Web Service at port " + address.getPort() + ", context root: " + listContextName);
 	    server.start();
 	    
 	    // FIXME this is testdata
 	    addCast(new Broadcast("dummy", 52, 13));
+	}
+
+	private void initHandlers() {
+		videoListHandler.setCasts(casts);
+		videoListHandler.setHostPort(String.format("%s:%d", hostName, port));
 	}
 
 	@Override
@@ -57,71 +67,12 @@ public class HttpWebService implements WebService, HttpHandler {
 		server.stop(0);
 	}
 
-	@Override
-	public void handle(HttpExchange e) throws IOException {
-		
-		if(!e.getRequestMethod().toUpperCase().equals("GET")) {
-			e.sendResponseHeaders(405, 0);
-			e.close();
-			LOG.debug("Rejected request from host: " + e.getRemoteAddress() + " (unallowed method " + e.getRequestMethod() + ")");
-			return;
-		}
-		
-		try {
-			processRequest(e);
-		}catch(IOException ex) {
-			LOG.error("I/O Error while handling HTTP Request: " + ex.getMessage());
-			throw ex;
-		} catch(Exception ex) {
-			LOG.error("Unexpected error while handling HTTP Request: " + ex);
-		}
+	public String getListContextName() {
+		return listContextName;
 	}
 
-	private void processRequest(HttpExchange e) throws IOException {
-		sendHeaders(e);
-		sendBody(e);
-		e.close();
-	}
-
-	private void sendHeaders(HttpExchange e) throws IOException {
-		e.getResponseHeaders().add("Content-Type", "application/json");
-		e.getResponseHeaders().add("Access-Control-Allow-Origin", "*");
-		e.getResponseHeaders().add("Content-Encoding", responseEncoding);
-		e.sendResponseHeaders(200, 0);
-	}
-
-	private void sendBody(HttpExchange e) throws IOException {
-		
-		OutputStreamWriter writer = new OutputStreamWriter(e.getResponseBody(), responseEncoding);
-		PrintWriter out = new PrintWriter(writer, true);
-		
-		out.print("{");
-		Set<String> keyset = casts.keySet();
-		for(String id : keyset) {
-			Broadcast cast = casts.get(id);
-			out.print(castToJson(cast));
-		}
-		out.print("}");
-		out.flush();
-		
-		e.getResponseBody().close();
-	}
-	
-	private String castToJson(Broadcast cast) {
-		StringBuilder builder = new StringBuilder();
-		builder.append(String.format("\"%s\":{", cast.getId()));
-		builder.append(String.format("\"lat\":%s,", cast.getLattitude()));
-		builder.append(String.format("\"lng\":%s", cast.getLongitude()));
-		builder.append("}");
-		return builder.toString();
-	}
-
-	public String getHttpContextName() {
-		return httpContextName;
-	}
-
-	public void setHttpContextName(String httpContextName) {
-		this.httpContextName = httpContextName;
+	public void setListContextName(String listContextName) {
+		this.listContextName = listContextName;
 	}
 	
 	public int getPort() {
@@ -132,11 +83,19 @@ public class HttpWebService implements WebService, HttpHandler {
 		this.port = port;
 	}
 
-	public String getResponseEncoding() {
-		return responseEncoding;
+	public String getVideoPath() {
+		return videoPath;
 	}
 
-	public void setResponseEncoding(String responseEncoding) {
-		this.responseEncoding = responseEncoding;
+	public void setVideoPath(String videoPath) {
+		this.videoPath = videoPath;
+	}
+
+	public String getHostName() {
+		return hostName;
+	}
+
+	public void setHostName(String hostName) {
+		this.hostName = hostName;
 	}
 }
