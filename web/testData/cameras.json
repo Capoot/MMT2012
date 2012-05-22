@@ -1,19 +1,23 @@
 {
     "1" : {
         "lat" : 52,
-        "lng" : 13
+        "lng" : 13,
+        "url" : "http://127.0.0.1/MMT2012/web/testData/video.mp4"
     },
 
     "2" : {
         "lat" : 51,
-        "lng" : 13
+        "lng" : 13,
+        "url" : "http://127.0.0.1/MMT2012/web/testData/video.mp4"
     },
     "3" : {
         "lat" : 53,
-        "lng" : 13
+        "lng" : 13,
+        "url" : "http://127.0.0.1/MMT2012/web/testData/video.mp4"
     },
     "4" : {
         "lat" : 52,
-        "lng" : 11
+        "lng" : 11,
+        "url" : "http://127.0.0.1/MMT2012/web/testData/video.mp4"
     }
 }
