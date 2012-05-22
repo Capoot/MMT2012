@@ -82,7 +82,7 @@ public class VideoListHandler implements HttpHandler {
 	}
 	
 	private Object makeUrl(Broadcast cast) {
-		return String.format("http://%s/watch/%s.mp4", hostPort, cast.getId());
+		return String.format("http://%s/watch/%s", hostPort, cast.getId());
 	}
 	
 	public String getResponseEncoding() {

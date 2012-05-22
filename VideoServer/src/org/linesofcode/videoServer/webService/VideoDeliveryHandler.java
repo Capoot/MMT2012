@@ -35,7 +35,6 @@ public class VideoDeliveryHandler implements HttpHandler {
 			throw ex;
 		} catch(Exception ex) {
 			LOG.error("Unexpected error while handling HTTP Request: " + ex);
-			ex.printStackTrace();
 		} finally {
 			e.close();
 		}
