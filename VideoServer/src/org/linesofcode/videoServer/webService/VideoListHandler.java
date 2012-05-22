@@ -37,13 +37,14 @@ public class VideoListHandler implements HttpHandler {
 			throw ex;
 		} catch(Exception ex) {
 			LOG.error("Unexpected error while handling HTTP Request: " + ex);
+		} finally {
+			e.close();
 		}
 	}
 	
 	private void processRequest(HttpExchange e) throws IOException {
 		sendHeaders(e);
 		sendBody(e);
-		e.close();
 	}
 
 	private void sendHeaders(HttpExchange e) throws IOException {

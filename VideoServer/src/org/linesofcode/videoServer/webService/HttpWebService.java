@@ -18,16 +18,17 @@ public class HttpWebService implements WebService {
 	private HttpServer server;
 	private InetSocketAddress address;
 	private String listContextName;
+	private String deliveryContextName;
 	private int port;
 	private String hostName;
 	private VideoListHandler videoListHandler;
-	
-	private String videoPath; // FIXME das soll woanders hin
+	private VideoDeliveryHandler deliveryHandler;
 	
 	private Map<String, Broadcast> casts = new HashMap<String, Broadcast>();
 
-	public HttpWebService(VideoListHandler videoListHandler) {
+	public HttpWebService(VideoListHandler videoListHandler, VideoDeliveryHandler deliveryHandler) {
 		this.videoListHandler = videoListHandler;
+		this.deliveryHandler = deliveryHandler;
 	}
 	
 	@Override
@@ -42,12 +43,12 @@ public class HttpWebService implements WebService {
 
 	@Override
 	public void start() throws IOException {
-		
+
 		initHandlers();
-		
 		address = new InetSocketAddress(port);
 		server = HttpServer.create(address, 0);
 		server.createContext(listContextName, videoListHandler);
+		server.createContext(deliveryContextName, deliveryHandler);
 		server.setExecutor(Executors.newCachedThreadPool());
 		
 		LOG.info("Launching Http Web Service at port " + address.getPort() + ", context root: " + listContextName);
@@ -83,19 +84,19 @@ public class HttpWebService implements WebService {
 		this.port = port;
 	}
 
-	public String getVideoPath() {
-		return videoPath;
-	}
-
-	public void setVideoPath(String videoPath) {
-		this.videoPath = videoPath;
-	}
-
 	public String getHostName() {
 		return hostName;
 	}
 
 	public void setHostName(String hostName) {
 		this.hostName = hostName;
+	}
+
+	public String getDeliveryContextName() {
+		return deliveryContextName;
+	}
+
+	public void setDeliveryContextName(String deliveryContextName) {
+		this.deliveryContextName = deliveryContextName;
 	}
 }

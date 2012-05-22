@@ -16,11 +16,16 @@
 		<property name="responseEncoding" value="UTF-8" />
 	</bean>
 	
+	<bean id="videoDeliveryHandler" class="org.linesofcode.videoServer.webService.VideoDeliveryHandler">
+		<property name="videoPath" value="./videoFiles" />
+	</bean>
+	
 	<bean id="webService" class="org.linesofcode.videoServer.webService.HttpWebService" >
 		<constructor-arg index="0" ref="videoListHandler" />
+		<constructor-arg index="1" ref="videoDeliveryHandler" />
 		<property name="listContextName" value="/videos" />
+		<property name="deliveryContextName" value="/watch" />
 		<property name="port" value="8081" />
-		<property name="videoPath" value="./videoFiles/" />
 		<property name="hostName" value="localhost" />
 	</bean>
 
