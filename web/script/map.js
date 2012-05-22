@@ -32,14 +32,14 @@ var App = function() {
 
 App.prototype.tick = function() {
     var that = this;
-    jQuery.getJSON("http://localhost:8081/videos", function(data) {
+    jQuery.getJSON("http://127.0.0.1:8081/videos", function(data) {
 
         $.each(that.cameras, function(id, vals) {
             vals.dirty = true;
         });
 
-        $.each(data, function(id, geo) {
-            that.updateCamera(id, geo.lat, geo.lng);
+        $.each(data, function(id, camera) {
+            that.updateCamera(id, camera.lat, camera.lng, camera.url);
         });
 
         $.each(that.cameras, function(id, vals) {
@@ -68,7 +68,7 @@ App.prototype.showPosition = function(lat, lng) {
     this.map.setZoom(12);
 };
 
-App.prototype.updateCamera = function(id, lat, lng) {
+App.prototype.updateCamera = function(id, lat, lng, url) {
 
     if (this.cameras[id] != undefined) {
         this.cameras[id].setPosition(new google.maps.LatLng(lat, lng));
@@ -79,37 +79,25 @@ App.prototype.updateCamera = function(id, lat, lng) {
             map: this.map,
             icon: "img/video.png"
         });
-        google.maps.event.addListener(marker, 'click', this.openInfoWindow);
+        google.maps.event.addListener(marker, 'click', function() {
+            infoWindow = $('#infoWindow');
+            infoWindow.removeClass('top');
+            infoWindow.addClass('right');
+            infoWindow.show();
+
+            flowplayer("player", "script/flowplayer-3.2.10.swf", {
+                clip: {
+                    url: url
+                }
+            });
+            $('.videoClose').click(function() {
+                infoWindow.hide();
+            });
+        });
+
         this.cameras[id] = marker;
     }
     this.cameras[id].dirty = false;
-};
-
-App.prototype.openInfoWindow = function() {
-    infoWindow = $('#infoWindow');
-    infoWindow.removeClass('top');
-    infoWindow.addClass('right');
-    infoWindow.show();
-
-
-    flowplayer("player", "script/flowplayer-3.2.10.swf", {
-        debug: true,
-        clip: {
-
-            //provider: 'mapStream',
-            url: 'http://127.0.0.1/mmt/testData/video.webm'
-        }
-
-        /*plugins: {
-            mapStream: {
-                url: "flowplayer.rtmp-3.2.9.swf",
-                netConnectionUrl: 'rtmp://s3b78u0kbtx79q.cloudfront.net/cfx/st'
-            }
-        }*/
-    });
-    $('.videoClose').click(function() {
-        infoWindow.hide();
-    });
 };
 
 App.prototype.closeWindow = function() {
