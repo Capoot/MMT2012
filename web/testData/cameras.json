@@ -2,7 +2,12 @@
     "1" : {
         "lat" : 52,
         "lng" : 13,
-        "url" : "http://127.0.0.1/MMT2012/web/testData/video.mp4"
+        "videos" : {
+            "eins" : {
+              "url": "http://127.0.0.1/MMT2012/web/testData/video",
+              "mime" : "bla"
+            }
+        }
     },
 
     "2" : {
