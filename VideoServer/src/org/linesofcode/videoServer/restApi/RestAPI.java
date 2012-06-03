@@ -1,19 +1,17 @@
-package org.linesofcode.videoServer.webService;
+package org.linesofcode.videoServer.restApi;
 
 import java.io.IOException;
 import java.net.InetSocketAddress;
-import java.util.HashMap;
-import java.util.Map;
 import java.util.concurrent.Executors;
 
 import org.apache.log4j.Logger;
-import org.linesofcode.videoServer.Broadcast;
+import org.linesofcode.videoServer.VideoServer;
 
 import com.sun.net.httpserver.HttpServer;
 
-public class HttpWebService implements WebService {
+public class RestAPI {
 
-	private static final Logger LOG = Logger.getLogger(HttpWebService.class);
+	private static final Logger LOG = Logger.getLogger(RestAPI.class);
 	
 	private HttpServer server;
 	private InetSocketAddress address;
@@ -23,25 +21,16 @@ public class HttpWebService implements WebService {
 	private String hostName;
 	private VideoListHandler videoListHandler;
 	private VideoDeliveryHandler deliveryHandler;
-	
-	private Map<String, Broadcast> casts = new HashMap<String, Broadcast>();
 
-	public HttpWebService(VideoListHandler videoListHandler, VideoDeliveryHandler deliveryHandler) {
+	private VideoServer videoServer;
+	
+
+	public RestAPI(VideoListHandler videoListHandler, VideoDeliveryHandler deliveryHandler, VideoServer videoServer) {
 		this.videoListHandler = videoListHandler;
 		this.deliveryHandler = deliveryHandler;
+		this.videoServer = videoServer;
 	}
 	
-	@Override
-	public void addCast(Broadcast cast) {
-		casts.put(cast.getId(), cast);
-	}
-
-	@Override
-	public void removeCast(Broadcast cast) {
-		casts.remove(cast.getId());
-	}
-
-	@Override
 	public void start() throws IOException {
 
 		initHandlers();
@@ -51,19 +40,15 @@ public class HttpWebService implements WebService {
 		server.createContext(deliveryContextName, deliveryHandler);
 		server.setExecutor(Executors.newCachedThreadPool());
 		
-		LOG.info("Launching Http Web Service at port " + address.getPort() + ", context root: " + listContextName);
 	    server.start();
-	    
-	    // FIXME this is testdata
-	    addCast(new Broadcast("dummy", 52, 13));
+	    LOG.info("REST API running at port " + address.getPort());
 	}
 
 	private void initHandlers() {
-		videoListHandler.setCasts(casts);
+		videoListHandler.setVideoServer(videoServer);
 		videoListHandler.setHostPort(String.format("%s:%d", hostName, port));
 	}
 
-	@Override
 	public void stop() {
 		server.stop(0);
 	}

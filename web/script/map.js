@@ -23,11 +23,6 @@ var App = function() {
     this.map = new google.maps.Map(document.getElementById("map_canvas"), myOptions);
     this.showUserOnMap();
 
-    this.tick();
-    var that = this;
-    window.setInterval(function() {
-        that.tick();
-    }, 5000);
 };
 
 App.prototype.tick = function() {

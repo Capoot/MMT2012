@@ -1,4 +1,4 @@
-package org.linesofcode.videoServer.webService;
+package org.linesofcode.videoServer.restApi;
 
 import java.io.BufferedInputStream;
 import java.io.File;
