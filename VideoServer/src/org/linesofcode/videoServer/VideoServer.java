@@ -1,36 +1,35 @@
 package org.linesofcode.videoServer;
 
 import java.io.IOException;
-
-import org.apache.log4j.Logger;
-import org.linesofcode.videoServer.broadcast.Broadcaster;
-import org.linesofcode.videoServer.receive.Receiver;
-import org.linesofcode.videoServer.webService.WebService;
+import java.util.Collection;
+import java.util.HashMap;
+import java.util.Map;
 
 public class VideoServer {
 	
-	private static final Logger LOG = Logger.getLogger(VideoServer.class);
 	
-	private Receiver receiver;
-	private Broadcaster broadcaster;
-	private WebService webService;
+	private Map<String, Broadcast> casts = new HashMap<String, Broadcast>();
 	
-	public VideoServer(WebService webService) {
-		this.webService = webService;
+	public VideoServer() {
 	}
 	
 	public void start() throws IOException {
-		webService.start();
-		LOG.info("Starting Server...");
+		// FIXME this is testdata
+	    addCast(new Broadcast("dummy", 52, 13));
 	}
-
 
 	public void shutDown() throws IOException {
-		LOG.info("Stopping Server...");
-		webService.stop();
 	}
 
-	public static Logger getLog() {
-		return LOG;
+	public void addCast(Broadcast cast) {
+		casts.put(cast.getId(), cast);
+	}
+
+	public void removeCast(Broadcast cast) {
+		casts.remove(cast.getId());
+	}
+	
+	public Collection<Broadcast> getCasts() {
+		return casts.values();
 	}
 }

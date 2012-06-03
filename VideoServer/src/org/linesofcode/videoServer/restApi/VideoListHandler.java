@@ -1,13 +1,13 @@
-package org.linesofcode.videoServer.webService;
+package org.linesofcode.videoServer.restApi;
 
 import java.io.IOException;
 import java.io.OutputStreamWriter;
 import java.io.PrintWriter;
-import java.util.Map;
-import java.util.Set;
+import java.util.Collection;
 
 import org.apache.log4j.Logger;
 import org.linesofcode.videoServer.Broadcast;
+import org.linesofcode.videoServer.VideoServer;
 
 import com.sun.net.httpserver.HttpExchange;
 import com.sun.net.httpserver.HttpHandler;
@@ -16,9 +16,10 @@ public class VideoListHandler implements HttpHandler {
 
 	private static Logger LOG = Logger.getLogger(VideoListHandler.class);
 	
-	private Map<String, Broadcast> casts;
 	private String responseEncoding;
 	private Object hostPort;
+
+	private VideoServer videoServer;
 	
 	@Override
 	public void handle(HttpExchange e) throws IOException {
@@ -37,6 +38,7 @@ public class VideoListHandler implements HttpHandler {
 			throw ex;
 		} catch(Exception ex) {
 			LOG.error("Unexpected error while handling HTTP Request: " + ex);
+			ex.printStackTrace();
 		} finally {
 			e.close();
 		}
@@ -58,11 +60,10 @@ public class VideoListHandler implements HttpHandler {
 		
 		OutputStreamWriter writer = new OutputStreamWriter(e.getResponseBody(), responseEncoding);
 		PrintWriter out = new PrintWriter(writer, true);
+		Collection<Broadcast> casts = videoServer.getCasts();
 		
 		out.print("{");
-		Set<String> keyset = casts.keySet();
-		for(String id : keyset) {
-			Broadcast cast = casts.get(id);
+		for(Broadcast cast : casts) {
 			out.print(castToJson(cast));
 		}
 		out.print("}");
@@ -93,19 +94,15 @@ public class VideoListHandler implements HttpHandler {
 		this.responseEncoding = responseEncoding;
 	}
 
-	public Map<String, Broadcast> getCasts() {
-		return casts;
-	}
-
-	public void setCasts(Map<String, Broadcast> casts) {
-		this.casts = casts;
-	}
-
 	public Object getHostPort() {
 		return hostPort;
 	}
 
 	public void setHostPort(Object hostPort) {
 		this.hostPort = hostPort;
+	}
+
+	public void setVideoServer(VideoServer videoServer) {
+		this.videoServer = videoServer;
 	}
 }
