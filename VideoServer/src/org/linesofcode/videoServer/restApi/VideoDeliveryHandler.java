@@ -1,13 +1,12 @@
 package org.linesofcode.videoServer.restApi;
 
-import java.io.BufferedInputStream;
-import java.io.File;
-import java.io.FileInputStream;
 import java.io.FileNotFoundException;
 import java.io.IOException;
+import java.io.InputStream;
 import java.io.OutputStream;
 
 import org.apache.log4j.Logger;
+import org.linesofcode.videoServer.VideoServer;
 
 import com.sun.net.httpserver.HttpExchange;
 import com.sun.net.httpserver.HttpHandler;
@@ -16,7 +15,11 @@ public class VideoDeliveryHandler implements HttpHandler {
 
 	private static final Logger LOG = Logger.getLogger(VideoDeliveryHandler.class);
 	
-	private String videoPath;
+	private VideoServer videoServer;
+	
+	public VideoDeliveryHandler(VideoServer videoServer) {
+		this.videoServer = videoServer;
+	}
 	
 	@Override
 	public void handle(HttpExchange e) throws IOException {
@@ -50,18 +53,22 @@ public class VideoDeliveryHandler implements HttpHandler {
 			return;
 		}
 		
-		String path = String.format("%s/%s.mp4", videoPath, videoId);
-		File file = new File(path);
-		FileInputStream fis;
+		InputStream in;
+		
 		try {
-			fis = new FileInputStream(file);
+			in = videoServer.getVideoFileContent(videoId);
 		} catch(FileNotFoundException ex) {
 			e.sendResponseHeaders(404, 0);
 			e.close();
-			LOG.debug("File not found: " + path);
+			LOG.error("File not found: " + ex.getMessage());
+			return;
+		} catch(Exception ex) {
+			e.sendResponseHeaders(500, 0);
+			e.close();
+			LOG.error("IO Error: " + ex.getMessage());
+			ex.printStackTrace();
 			return;
 		}
-		BufferedInputStream in = new BufferedInputStream(fis);
 		
 		sendHeaders(e);
 		sendBody(e, in);
@@ -78,7 +85,7 @@ public class VideoDeliveryHandler implements HttpHandler {
 		e.sendResponseHeaders(200, 0);
 	}
 	
-	private void sendBody(HttpExchange e, BufferedInputStream in) throws IOException {
+	private void sendBody(HttpExchange e, InputStream in) throws IOException {
 		OutputStream out = e.getResponseBody();
 		while(true) {
 			byte[] b = new byte[512];
@@ -88,13 +95,5 @@ public class VideoDeliveryHandler implements HttpHandler {
 			}
 			out.write(b);
 		}
-	}
-
-	public String getVideoPath() {
-		return videoPath;
-	}
-
-	public void setVideoPath(String videoPath) {
-		this.videoPath = videoPath;
 	}
 }

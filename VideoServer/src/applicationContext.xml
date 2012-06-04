@@ -10,20 +10,21 @@
 	</bean>
 	 -->
 	<bean id="videoServer" class="org.linesofcode.videoServer.VideoServer">
+		<property name="videoPath" value="./videoFiles" />
 	</bean>
 	
 	<bean id="videoListHandler" class="org.linesofcode.videoServer.restApi.VideoListHandler">
+		<constructor-arg index="0" ref="videoServer" />
 		<property name="responseEncoding" value="UTF-8" />
 	</bean>
 	
 	<bean id="videoDeliveryHandler" class="org.linesofcode.videoServer.restApi.VideoDeliveryHandler">
-		<property name="videoPath" value="./videoFiles" />
+		<constructor-arg index="0" ref="videoServer" />
 	</bean>
 	
 	<bean id="restApi" class="org.linesofcode.videoServer.restApi.RestAPI" >
 		<constructor-arg index="0" ref="videoListHandler" />
 		<constructor-arg index="1" ref="videoDeliveryHandler" />
-		<constructor-arg index="2" ref="videoServer" />
 		<property name="listContextName" value="/videos" />
 		<property name="deliveryContextName" value="/watch" />
 		<property name="port" value="8081" />

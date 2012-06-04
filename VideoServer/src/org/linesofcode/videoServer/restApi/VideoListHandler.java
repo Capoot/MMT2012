@@ -21,6 +21,10 @@ public class VideoListHandler implements HttpHandler {
 
 	private VideoServer videoServer;
 	
+	public VideoListHandler(VideoServer videoServer) {
+		this.videoServer = videoServer;
+	}
+	
 	@Override
 	public void handle(HttpExchange e) throws IOException {
 		
@@ -100,9 +104,5 @@ public class VideoListHandler implements HttpHandler {
 
 	public void setHostPort(Object hostPort) {
 		this.hostPort = hostPort;
-	}
-
-	public void setVideoServer(VideoServer videoServer) {
-		this.videoServer = videoServer;
 	}
 }

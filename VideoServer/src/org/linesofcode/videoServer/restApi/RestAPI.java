@@ -5,7 +5,6 @@ import java.net.InetSocketAddress;
 import java.util.concurrent.Executors;
 
 import org.apache.log4j.Logger;
-import org.linesofcode.videoServer.VideoServer;
 
 import com.sun.net.httpserver.HttpServer;
 
@@ -22,13 +21,9 @@ public class RestAPI {
 	private VideoListHandler videoListHandler;
 	private VideoDeliveryHandler deliveryHandler;
 
-	private VideoServer videoServer;
-	
-
-	public RestAPI(VideoListHandler videoListHandler, VideoDeliveryHandler deliveryHandler, VideoServer videoServer) {
+	public RestAPI(VideoListHandler videoListHandler, VideoDeliveryHandler deliveryHandler) {
 		this.videoListHandler = videoListHandler;
 		this.deliveryHandler = deliveryHandler;
-		this.videoServer = videoServer;
 	}
 	
 	public void start() throws IOException {
@@ -45,7 +40,6 @@ public class RestAPI {
 	}
 
 	private void initHandlers() {
-		videoListHandler.setVideoServer(videoServer);
 		videoListHandler.setHostPort(String.format("%s:%d", hostName, port));
 	}
 
