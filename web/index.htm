@@ -48,8 +48,24 @@
     </div>
 </div>
 
-<div class="container" id="map">
-    <div id="map_canvas"></div>
+<div class="container map">
+    <div class="row map">
+        <div class="span6 map">
+            <div id="map_canvas"></div>
+        </div>
+        <div class="span6" id="video">
+            <div class="well">
+                <h1>Title</h1>
+                <a href="#">enlarge to fullscreen</a>
+                <br />
+                <video controls="controls">
+                    <source src="testData/video.mp4" type="video/mp4" />
+                    <source src="testData/video.ogv" type="video/ogg" />
+                    Your browser does not support the video tag.
+                </video>
+            </div>
+        </div>
+    </div>
 </div>
 
 </body>
