@@ -55,6 +55,9 @@
             <h1>Upload a clip</h1>
         </div>
         <div class="span6">
+            <div id="errorSpace">
+
+            </div>
             <form action="#someServer" method="post" enctype="multipart/form-data" class="form-horizontal">
                 <fieldset>
                     <div class="control-group">
@@ -68,7 +71,7 @@
                         <label class="control-label" for="video">Clip file</label>
 
                         <div class="controls">
-                            <input type="file" id="video" name="video"/>
+                            <input type="file" id="video" name="video" class="btn"/>
                         </div>
                     </div>
                     <div class="control-group">

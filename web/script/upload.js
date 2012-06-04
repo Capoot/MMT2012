@@ -2,6 +2,23 @@
 $(document).ready(function (){
     var app = new App();
 
+    $("input[type=submit]").click(function(event){
+        if ($("#name").val() == "") {
+            alert("Title must be set");
+            event.preventDefault();
+            return;
+        }
+        if ($("#video").val() == "") {
+            alert("Video must be selected");
+            event.preventDefault();
+            return;
+        }
+        if ($("#lat").val() == "" || $("#lng").val() == "") {
+            alert("Location must be chosen.");
+            event.preventDefault();
+            return;
+        }
+    });
 });
 
 var App = function() {
