@@ -13,7 +13,7 @@
             padding-top: 60px;
         }
     </style>
-    <link href="style/main.css" rel="stylesheet" />
+    <link href="style/main.css" rel="stylesheet"/>
     <link href="style/bootstrap-responsive.css" rel="stylesheet">
 
     <!--[if lt IE 9]>
@@ -37,6 +37,7 @@
                 <span class="icon-bar"></span>
             </a>
             <a class="brand" href="index.htm">VideoWatch</a>
+
             <div class="nav-collapse">
                 <ul class="nav">
                     <li><a href="index.htm">Full map</a></li>
@@ -50,38 +51,68 @@
 
 <div class="container">
     <div class="row">
-        <div class="span12">
-            <h1>Video hochladen</h1>
-            <p>
-                <form>
-                    <label for="name">Name</label>
-                    <input type="text" placeholder="Was siehst du?" id="name" />
-                    <label for="video">Video</label>
-                    <input type="file" id="video"/>
-                </form>
-            </p>
+        <div class="page-header">
+            <h1>Upload a clip</h1>
         </div>
+        <form action="#someServer" method="post" enctype="multipart/form-data" class="form-horizontal">
+            <div class="span6">
+
+                <fieldset>
+                    <div class="control-group">
+                        <label class="control-label" for="name">Title</label>
+                        <div class="controls">
+                            <input type="text" placeholder="What's to see?" id="name"/>
+                        </div>
+                    </div>
+                    <div class="control-group">
+                        <label class="control-label" for="video">Clip file</label>
+                        <div class="controls">
+                            <input type="file" id="video" />
+                        </div>
+                    </div>
+                    <div class="control-group">
+                        <label class="control-label" for="location">Location</label>
+                        <div class="controls">
+                            <input type="text" id="location" placeholder="Rungestraße 20, 10179 Berlin" />
+                            <input type="hidden" name="lat" />
+                            <input type="hidden" name="lng" />
+                            <button id="geoPicker" class="btn btn-primary">
+                                <i class="icon-map-marker icon-white"></i> Pick on map
+                            </button>
+                        </div>
+                    </div>
+                    <div class="form-actions">
+                        <a href="index.htm" class="btn">Cancel</a>
+                        <input class="btn btn-primary" type="submit" value="Upload!" />
+                    </div>
+                </fieldset>
+
+            </div>
+            <div class="span6">
+                <div id="map_canvas" style="height: 30em;"></div>
+            </div>
+        </form>
     </div>
 
-
-    <div class="row">
-        <div class="span6" id="map">
-            <div id="map_canvas" style="height: 50em;"></div>
-        </div>
-        <div class="span6">
-            <div class="row">
-                <div class="span6">
-                    <h1>Videos in der Nähe</h1>
-                    <ul>
-                        <li>some 1</li>
-                        <li>some 2</li>
-                        <li>some 3</li>
-                    </ul>
-                </div>
+<!--
+<div class="row">
+    <div class="span6" id="map">
+        <div id="map_canvas" style="height: 50em;"></div>
+    </div>
+    <div class="span6">
+        <div class="row">
+            <div class="span6">
+                <h1>Videos in der Nähe</h1>
+                <ul>
+                    <li>some 1</li>
+                    <li>some 2</li>
+                    <li>some 3</li>
+                </ul>
             </div>
         </div>
     </div>
 </div>
-
+</div>
+-->
 </body>
 </html>
