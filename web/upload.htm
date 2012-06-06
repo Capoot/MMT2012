@@ -58,7 +58,7 @@
             <div id="errorSpace">
 
             </div>
-            <form action="#someServer" method="post" enctype="multipart/form-data" class="form-horizontal">
+            <form action="http://localhost:8081/upload" method="post" enctype="multipart/form-data" class="form-horizontal">
                 <fieldset>
                     <div class="control-group">
                         <label class="control-label" for="name">Title</label>
@@ -91,6 +91,7 @@
                         <input class="btn btn-primary" type="submit" value="Upload!"/>
                     </div>
                 </fieldset>
+		<input type="hidden" name="redirect_to_url" value="http://localhost/web/index.html" />
             </form>
         </div>
         <div class="span6">
