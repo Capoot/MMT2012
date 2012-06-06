@@ -1,10 +1,13 @@
 package org.linesofcode.videoServer;
 
 import java.io.BufferedInputStream;
+import java.io.BufferedOutputStream;
 import java.io.File;
 import java.io.FileInputStream;
+import java.io.FileOutputStream;
 import java.io.IOException;
 import java.io.InputStream;
+import java.io.OutputStream;
 import java.util.Collection;
 import java.util.HashMap;
 import java.util.Map;
@@ -38,11 +41,18 @@ public class VideoServer {
 		return casts.values();
 	}
 	
-	public InputStream getVideoFileContent(String videoId) throws IOException {
+	public InputStream loadVideo(String videoId) throws IOException {
 		String path = String.format("%s/%s.mp4", videoPath, videoId);
 		File file = new File(path);
 		FileInputStream fis = new FileInputStream(file);
 		return new BufferedInputStream(fis);
+	}
+	
+	public OutputStream saveVideo(String videoId) throws IOException {
+		String path = String.format("%s/%s.mp4", videoPath, videoId);
+		File file = new File(path);
+		FileOutputStream fos = new FileOutputStream(file);
+		return new BufferedOutputStream(fos);
 	}
 	
 	public String getVideoPath() {
