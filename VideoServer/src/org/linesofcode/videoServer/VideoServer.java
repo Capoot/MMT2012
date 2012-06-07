@@ -2,8 +2,10 @@ package org.linesofcode.videoServer;
 
 import java.io.BufferedInputStream;
 import java.io.BufferedOutputStream;
+import java.io.EOFException;
 import java.io.File;
 import java.io.FileInputStream;
+import java.io.FileNotFoundException;
 import java.io.FileOutputStream;
 import java.io.IOException;
 import java.io.InputStream;
@@ -28,10 +30,10 @@ public class VideoServer {
 		LOG.info("Loading broadcasts...");
 		try {
 			loadCasts();
+		} catch(FileNotFoundException e) {
+			LOG.warn(String.format("%s. New data file will be created.", e));
 		} catch(IOException e) {
-			LOG.warn(String.format("Loading broadcast data from %s/%s failed. A new data file will be created. " +
-					"Please check your config, if data should have been present.", dataDir, DATA_FILE));
-			// error intentionally supressed
+			LOG.warn(String.format("Broadcast data from %s/%s could not be read: %s", dataDir, DATA_FILE, e));
 		}
 	}
 
@@ -54,7 +56,13 @@ public class VideoServer {
 
 	private void readBroadcasts(ObjectInputStream in) throws IOException, ClassNotFoundException {
 		while(true) {
-			Broadcast cast = (Broadcast)in.readObject();
+			Broadcast cast = null;
+			try {
+				cast = (Broadcast)in.readObject();
+			} catch(EOFException e) {
+				// reading finished
+				return;
+			}
 			if(cast == null) {
 				break;
 			}
@@ -110,7 +118,30 @@ public class VideoServer {
 	
 	public void saveVideo(InputStream in, String id, double lat, double lng, String title) throws IOException {
 		LOG.debug("Transcoding video lat: " + lat + "; long: " + lng + "; ID: " + id + " title: " + title + "; data present: " + (in != null));
+		addCast(new Broadcast(id, lat, lng, title));
+		writeVideoFileToDisk(in, id);
 		in.close();
+		try {
+			LOG.debug("Saving broadcast data...");
+			saveCasts();
+		} catch(Exception e) {
+			LOG.error("failed to save broadcast data", e);
+		}
+	}
+
+	private void writeVideoFileToDisk(InputStream in, String id)
+			throws FileNotFoundException, IOException {
+		// TODO ensure vide content type
+		File file = new File(String.format("%s/%s", videoPath, id));
+		FileOutputStream fos = new FileOutputStream(file);
+		BufferedOutputStream out = new BufferedOutputStream(fos);
+		int read;
+		do {
+			byte[] data = new byte[512];
+			read = in.read(data);
+			out.write(data);
+		} while(read > 0);
+		out.close();
 	}
 	
 	public String getVideoPath() {
