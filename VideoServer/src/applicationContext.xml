@@ -11,6 +11,7 @@
 	 -->
 	<bean id="videoServer" class="org.linesofcode.videoServer.VideoServer">
 		<property name="videoPath" value="./videoFiles" />
+		<property name="dataDir" value="./data" />
 	</bean>
 	
 	<bean id="videoListHandler" class="org.linesofcode.videoServer.restApi.VideoListHandler">

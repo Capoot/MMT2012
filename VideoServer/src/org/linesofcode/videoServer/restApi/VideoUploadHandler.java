@@ -86,8 +86,6 @@ public class VideoUploadHandler implements HttpHandler {
 		
 		// TODO the following operations could be threaded
 		// TODO we could send positive response before processing
-		LOG.debug("Transcoding video lat: " + lat + "; long: " + lng + "; ID: " + id + " title: " + title + "; data present: " + (data != null));
-		
 		try {
 			videoServer.saveVideo(data, id, lat, lng, title);
 		} finally {

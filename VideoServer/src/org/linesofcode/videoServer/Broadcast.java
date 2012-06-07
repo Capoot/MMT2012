@@ -1,7 +1,11 @@
 package org.linesofcode.videoServer;
 
-public class Broadcast {
+import java.io.Serializable;
 
+public class Broadcast implements Serializable {
+
+	private static final long serialVersionUID = 5921215050421366377L;
+	
 	private String id;
 	private long lattitude;
 	private long longitude;
