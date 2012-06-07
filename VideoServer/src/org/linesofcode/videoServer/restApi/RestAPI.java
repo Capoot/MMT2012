@@ -22,6 +22,7 @@ public class RestAPI {
 	private VideoListHandler videoListHandler;
 	private VideoDeliveryHandler deliveryHandler;
 	private VideoUploadHandler uploadHandler;
+	private String uploadTempDir;
 
 	public RestAPI(VideoListHandler videoListHandler, VideoDeliveryHandler deliveryHandler, VideoUploadHandler uploadHandler) {
 		this.videoListHandler = videoListHandler;
@@ -44,6 +45,7 @@ public class RestAPI {
 
 	private void initHandlers() {
 		videoListHandler.setHostPort(String.format("%s:%d", hostName, port));
+		uploadHandler.setTempDir(uploadTempDir);
 	}
 
 	public void stop() {
@@ -88,5 +90,13 @@ public class RestAPI {
 
 	public void setUploadContextName(String uploadContextName) {
 		this.uploadContextName = uploadContextName;
+	}
+
+	public String getUploadTempDir() {
+		return uploadTempDir;
+	}
+
+	public void setUploadTempDir(String uploadTempDir) {
+		this.uploadTempDir = uploadTempDir;
 	}
 }

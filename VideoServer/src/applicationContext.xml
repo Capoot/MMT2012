@@ -35,6 +35,7 @@
 		<property name="uploadContextName" value="/upload" />
 		<property name="port" value="8081" />
 		<property name="hostName" value="localhost" />
+		<property name="uploadTempDir" value="./uploadedTempFiles" />
 	</bean>
 	
 </beans>
