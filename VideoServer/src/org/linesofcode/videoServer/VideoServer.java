@@ -20,7 +20,7 @@ public class VideoServer {
 	
 	public void start() throws IOException {
 		// FIXME this is testdata
-	    addCast(new Broadcast("dummy", 52, 13));
+	    addCast(new Broadcast("dummy", 52, 13, "some title"));
 	}
 
 	public void shutDown() throws IOException {

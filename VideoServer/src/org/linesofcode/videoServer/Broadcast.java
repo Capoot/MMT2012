@@ -5,11 +5,13 @@ public class Broadcast {
 	private String id;
 	private long lattitude;
 	private long longitude;
+	private String title;
 	
-	public Broadcast(String id, long lattitude, long longitude) {
+	public Broadcast(String id, long lattitude, long longitude, String title) {
 		this.id = id;
 		this.lattitude = lattitude;
 		this.longitude = longitude;
+		this.title = title;
 	}
 
 	public void setLattitude(long lattitude) {
@@ -34,5 +36,13 @@ public class Broadcast {
 
 	public String getId() {
 		return id;
+	}
+	
+	public String getTitle() {
+		return title;
+	}
+
+	public void setTitle(String title) {
+		this.title = title;
 	}
 }
