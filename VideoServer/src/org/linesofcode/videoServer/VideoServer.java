@@ -45,7 +45,7 @@ public class VideoServer {
 		return new BufferedInputStream(fis);
 	}
 	
-	public void saveVideo(InputStream in, String id, double lat, double lng) throws IOException {
+	public void saveVideo(InputStream in, String id, double lat, double lng, String title) throws IOException {
 		in.close();
 	}
 	

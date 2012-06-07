@@ -81,7 +81,8 @@ public class VideoListHandler implements HttpHandler {
 		builder.append(String.format("\"%s\":{", cast.getId()));
 		builder.append(String.format("\"lat\":%s,", cast.getLattitude()));
 		builder.append(String.format("\"lng\":%s,", cast.getLongitude()));
-		builder.append(String.format("\"url\":\"%s\"", makeUrl(cast)));
+		builder.append(String.format("\"url\":\"%s\",", makeUrl(cast)));
+		builder.append(String.format("\"title\":\"%s\"", cast.getTitle()));
 		builder.append("}");
 		return builder.toString();
 	}

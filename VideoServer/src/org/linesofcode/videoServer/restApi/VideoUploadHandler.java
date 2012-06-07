@@ -62,6 +62,7 @@ public class VideoUploadHandler implements HttpHandler {
 		double lat = 0.0;
 		double lng = 0.0;
 		InputStream data = null;
+		String title = null;
 		
 		for(Object o : items) {
 			FileItem item = (FileItem)o;
@@ -76,15 +77,19 @@ public class VideoUploadHandler implements HttpHandler {
 			}
 			if(item.getFieldName().toLowerCase().equals("lng")) {
 				lng = Double.parseDouble(item.getString());
+				continue;
+			}
+			if(item.getFieldName().toLowerCase().equals("title")) {
+				title = item.getString();
 			}
 		}
 		
 		// TODO the following operations could be threaded
 		// TODO we could send positive response before processing
-		LOG.debug("Transcoding video lat: " + lat + "; long: " + lng + "; ID: " + id + "; data present: " + (data != null));
+		LOG.debug("Transcoding video lat: " + lat + "; long: " + lng + "; ID: " + id + " title: " + title + "; data present: " + (data != null));
 		
 		try {
-			videoServer.saveVideo(data, id, lat, lng);
+			videoServer.saveVideo(data, id, lat, lng, title);
 		} finally {
 			LOG.debug("Deleting temporary files...");
 			for(Object o : items) {
