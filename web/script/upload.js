@@ -19,6 +19,29 @@ $(document).ready(function (){
             return;
         }
     });
+
+    var progress = $('.progress');
+    progress.hide();
+
+    $("form").ajaxForm({
+        beforeSend: function() {
+            progress.show();
+            $('input').attr('disabled', 'disabled');
+            $('button').attr('disabled', 'disabled');
+        },
+        uploadProgress: function(event, position, total, percentComplete) {
+            progress.css('width', percentComplete);
+        },
+        complete: function(xhr) {
+            console.log(xhr);
+        },
+        error: function() {
+            alert("error");
+            progress.hide();
+            $('input').removeAttr('disabled');
+            $('button').removeAttr('disabled');
+        }
+    });
 });
 
 var App = function() {
