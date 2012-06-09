@@ -8,6 +8,7 @@ $(document).ready(function (){
         $('#videoMap').removeClass('span6');
         $('#videoMap').addClass('span12');
         $('#video').hide();
+        google.maps.event.trigger(app.map, "resize");
     });
 });
 
