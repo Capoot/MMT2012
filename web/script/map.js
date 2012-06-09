@@ -1,7 +1,14 @@
 
 $(document).ready(function (){
-
     var app = new App();
+
+    $('#video').hide();
+
+    $('#closeVideo').click(function(){
+        $('#videoMap').removeClass('span6');
+        $('#videoMap').addClass('span12');
+        $('#video').hide();
+    });
 });
 
 var App = function() {
@@ -23,11 +30,12 @@ var App = function() {
     this.map = new google.maps.Map(document.getElementById("map_canvas"), myOptions);
     this.showUserOnMap();
 
+    this.tick();
 };
 
 App.prototype.tick = function() {
     var that = this;
-    jQuery.getJSON("http://127.0.0.1:8081/videos", function(data) {
+    jQuery.getJSON("http://localhost:8081/videos", function(data) {
 
         $.each(that.cameras, function(id, vals) {
             vals.dirty = true;
@@ -75,19 +83,10 @@ App.prototype.updateCamera = function(id, lat, lng, url) {
             icon: "img/video.png"
         });
         google.maps.event.addListener(marker, 'click', function() {
-            infoWindow = $('#infoWindow');
-            infoWindow.removeClass('top');
-            infoWindow.addClass('right');
-            infoWindow.show();
-
-            flowplayer("player", "script/flowplayer-3.2.10.swf", {
-                clip: {
-                    url: url
-                }
-            });
-            $('.videoClose').click(function() {
-                infoWindow.hide();
-            });
+            $('#videoMap').removeClass('span12');
+            $('#videoMap').addClass('span6');
+            $('#video').show();
+            $('#video video').attr('src', url);
         });
 
         this.cameras[id] = marker;
