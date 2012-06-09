@@ -56,7 +56,7 @@ public class VideoDeliveryHandler implements HttpHandler {
 		InputStream in;
 		
 		try {
-			in = videoServer.getVideoFileContent(videoId);
+			in = videoServer.loadVideo(videoId);
 		} catch(FileNotFoundException ex) {
 			e.sendResponseHeaders(404, 0);
 			e.close();

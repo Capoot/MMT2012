@@ -11,6 +11,7 @@
 	 -->
 	<bean id="videoServer" class="org.linesofcode.videoServer.VideoServer">
 		<property name="videoPath" value="./videoFiles" />
+		<property name="dataDir" value="./data" />
 	</bean>
 	
 	<bean id="videoListHandler" class="org.linesofcode.videoServer.restApi.VideoListHandler">
@@ -22,13 +23,20 @@
 		<constructor-arg index="0" ref="videoServer" />
 	</bean>
 	
+	<bean id="videoUploadHandler" class="org.linesofcode.videoServer.restApi.VideoUploadHandler" >
+		<constructor-arg index="0" ref="videoServer" />
+	</bean>
+	
 	<bean id="restApi" class="org.linesofcode.videoServer.restApi.RestAPI" >
 		<constructor-arg index="0" ref="videoListHandler" />
 		<constructor-arg index="1" ref="videoDeliveryHandler" />
+		<constructor-arg index="2" ref="videoUploadHandler" />
 		<property name="listContextName" value="/videos" />
 		<property name="deliveryContextName" value="/watch" />
+		<property name="uploadContextName" value="/upload" />
 		<property name="port" value="8081" />
 		<property name="hostName" value="localhost" />
+		<property name="uploadTempDir" value="./uploadedTempFiles" />
 	</bean>
 	
 </beans>

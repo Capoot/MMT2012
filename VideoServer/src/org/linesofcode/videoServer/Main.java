@@ -22,8 +22,9 @@ public class Main {
         LOG.info("Starting video server...");
         try {
 			videoServer.start();
-		} catch (IOException e) {
+		} catch (Exception e) {
 			LOG.error("Video server startup failed.", e);
+			return;
 		}
         
         LOG.info("Starting REST API...");
@@ -40,7 +41,7 @@ public class Main {
             public void run() {
                 try {
                     videoServer.shutDown();
-                } catch (IOException e) {
+                } catch (Exception e) {
                     LOG.error("Error while shutting down video server.",  e);
                 }
                 try {

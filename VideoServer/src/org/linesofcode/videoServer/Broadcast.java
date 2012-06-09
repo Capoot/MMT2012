@@ -1,22 +1,28 @@
 package org.linesofcode.videoServer;
 
-public class Broadcast {
+import java.io.Serializable;
 
-	private String id;
-	private long lattitude;
-	private long longitude;
+public class Broadcast implements Serializable {
+
+	private static final long serialVersionUID = 5921215050421366377L;
 	
-	public Broadcast(String id, long lattitude, long longitude) {
+	private String id;
+	private double lattitude;
+	private double longitude;
+	private String title;
+	
+	public Broadcast(String id, double lattitude, double longitude, String title) {
 		this.id = id;
 		this.lattitude = lattitude;
 		this.longitude = longitude;
+		this.title = title;
 	}
 
-	public void setLattitude(long lattitude) {
+	public void setLattitude(double lattitude) {
 		this.lattitude = lattitude;
 	}
 
-	public void setLongitude(long longitude) {
+	public void setLongitude(double longitude) {
 		this.longitude = longitude;
 	}
 
@@ -24,15 +30,23 @@ public class Broadcast {
 		return id;
 	}
 
-	public long getLattitude() {
+	public double getLattitude() {
 		return lattitude;
 	}
 
-	public long getLongitude() {
+	public double getLongitude() {
 		return longitude;
 	}
 
 	public String getId() {
 		return id;
+	}
+	
+	public String getTitle() {
+		return title;
+	}
+
+	public void setTitle(String title) {
+		this.title = title;
 	}
 }

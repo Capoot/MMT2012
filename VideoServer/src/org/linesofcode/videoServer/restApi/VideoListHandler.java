@@ -4,6 +4,7 @@ import java.io.IOException;
 import java.io.OutputStreamWriter;
 import java.io.PrintWriter;
 import java.util.Collection;
+import java.util.Iterator;
 
 import org.apache.log4j.Logger;
 import org.linesofcode.videoServer.Broadcast;
@@ -65,10 +66,14 @@ public class VideoListHandler implements HttpHandler {
 		OutputStreamWriter writer = new OutputStreamWriter(e.getResponseBody(), responseEncoding);
 		PrintWriter out = new PrintWriter(writer, true);
 		Collection<Broadcast> casts = videoServer.getCasts();
+		Iterator<Broadcast> it = casts.iterator();
 		
 		out.print("{");
-		for(Broadcast cast : casts) {
-			out.print(castToJson(cast));
+		while(it.hasNext()) {
+			out.print(castToJson(it.next()));
+			if(it.hasNext()) {
+				out.print(",");
+			}
 		}
 		out.print("}");
 		out.flush();
@@ -81,7 +86,8 @@ public class VideoListHandler implements HttpHandler {
 		builder.append(String.format("\"%s\":{", cast.getId()));
 		builder.append(String.format("\"lat\":%s,", cast.getLattitude()));
 		builder.append(String.format("\"lng\":%s,", cast.getLongitude()));
-		builder.append(String.format("\"url\":\"%s\"", makeUrl(cast)));
+		builder.append(String.format("\"url\":\"%s\",", makeUrl(cast)));
+		builder.append(String.format("\"title\":\"%s\"", cast.getTitle()));
 		builder.append("}");
 		return builder.toString();
 	}

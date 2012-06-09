@@ -16,14 +16,18 @@ public class RestAPI {
 	private InetSocketAddress address;
 	private String listContextName;
 	private String deliveryContextName;
+	private String uploadContextName;
 	private int port;
 	private String hostName;
 	private VideoListHandler videoListHandler;
 	private VideoDeliveryHandler deliveryHandler;
+	private VideoUploadHandler uploadHandler;
+	private String uploadTempDir;
 
-	public RestAPI(VideoListHandler videoListHandler, VideoDeliveryHandler deliveryHandler) {
+	public RestAPI(VideoListHandler videoListHandler, VideoDeliveryHandler deliveryHandler, VideoUploadHandler uploadHandler) {
 		this.videoListHandler = videoListHandler;
 		this.deliveryHandler = deliveryHandler;
+		this.uploadHandler = uploadHandler;
 	}
 	
 	public void start() throws IOException {
@@ -31,30 +35,23 @@ public class RestAPI {
 		initHandlers();
 		address = new InetSocketAddress(port);
 		server = HttpServer.create(address, 0);
+		server.setExecutor(Executors.newCachedThreadPool());
 		server.createContext(listContextName, videoListHandler);
 		server.createContext(deliveryContextName, deliveryHandler);
-		server.setExecutor(Executors.newCachedThreadPool());
-		
+		server.createContext(uploadContextName, uploadHandler);
 	    server.start();
 	    LOG.info("REST API running at port " + address.getPort());
 	}
 
 	private void initHandlers() {
 		videoListHandler.setHostPort(String.format("%s:%d", hostName, port));
+		uploadHandler.setTempDir(uploadTempDir);
 	}
 
 	public void stop() {
 		server.stop(0);
 	}
 
-	public String getListContextName() {
-		return listContextName;
-	}
-
-	public void setListContextName(String listContextName) {
-		this.listContextName = listContextName;
-	}
-	
 	public int getPort() {
 		return port;
 	}
@@ -70,6 +67,14 @@ public class RestAPI {
 	public void setHostName(String hostName) {
 		this.hostName = hostName;
 	}
+	
+	public String getListContextName() {
+		return listContextName;
+	}
+
+	public void setListContextName(String listContextName) {
+		this.listContextName = listContextName;
+	}
 
 	public String getDeliveryContextName() {
 		return deliveryContextName;
@@ -77,5 +82,21 @@ public class RestAPI {
 
 	public void setDeliveryContextName(String deliveryContextName) {
 		this.deliveryContextName = deliveryContextName;
+	}
+
+	public String getUploadContextName() {
+		return uploadContextName;
+	}
+
+	public void setUploadContextName(String uploadContextName) {
+		this.uploadContextName = uploadContextName;
+	}
+
+	public String getUploadTempDir() {
+		return uploadTempDir;
+	}
+
+	public void setUploadTempDir(String uploadTempDir) {
+		this.uploadTempDir = uploadTempDir;
 	}
 }

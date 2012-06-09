@@ -7,3 +7,6 @@ VideoServer/bin
 out
 .settings
 *.swp
+*.xml.out
+VideoServer/data
+VideoServer/videoFiles
