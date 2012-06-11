@@ -1,6 +1,8 @@
 package org.linesofcode.videoServer;
 
 import org.apache.log4j.Logger;
+import org.linesofcode.videoServer.db.BroadcastDao;
+import org.linesofcode.videoServer.db.EmbeddedMongoDbProcess;
 import org.linesofcode.videoServer.restApi.RestAPI;
 import org.springframework.context.ApplicationContext;
 import org.springframework.context.support.ClassPathXmlApplicationContext;
@@ -16,7 +18,18 @@ public class Main {
 		ApplicationContext context = new ClassPathXmlApplicationContext(new String[]{"applicationContext.xml"});
 		final VideoServer videoServer = context.getBean("videoServer", VideoServer.class);
         final RestAPI restApi = context.getBean("restApi", RestAPI.class);
-        addShutdownHook(videoServer,restApi);
+        final EmbeddedMongoDbProcess mongo = context.getBean("mongodb", EmbeddedMongoDbProcess.class);
+        addShutdownHook(videoServer, restApi, mongo);
+        
+        LOG.info("Starting embedded MongoDB...");
+        try {
+        	mongo.start();
+        } catch(Exception e) {
+        	LOG.error("Starting embedded MongoDB failed.", e);
+        	return;
+        }
+        
+        videoServer.setBroadcastDao(context.getBean("broadcastDao", BroadcastDao.class));
 
         LOG.info("Starting video server...");
         try {
@@ -34,7 +47,7 @@ public class Main {
 		}
 	}
 
-    private static void addShutdownHook(final VideoServer videoServer, final RestAPI restApi) {
+    private static void addShutdownHook(final VideoServer videoServer, final RestAPI restApi, final EmbeddedMongoDbProcess mongo) {
         Runtime.getRuntime().addShutdownHook(new Thread() {
             @Override
             public void run() {
@@ -47,6 +60,11 @@ public class Main {
                     restApi.stop();
                 } catch (Exception e) {
                     LOG.error("Error while shutting down REST API.",  e);
+                }
+                try {
+                	mongo.stop();
+                } catch(Exception e) {
+                	LOG.error("Error while shutting down embedded MongoDB",  e);
                 }
                 LOG.info("Shutdown hook completed");
             }

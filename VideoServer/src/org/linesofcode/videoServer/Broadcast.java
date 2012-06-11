@@ -26,10 +26,6 @@ public class Broadcast implements Serializable {
 		this.longitude = longitude;
 	}
 
-	public String getUrl() {
-		return id;
-	}
-
 	public double getLattitude() {
 		return lattitude;
 	}

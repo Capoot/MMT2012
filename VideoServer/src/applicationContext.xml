@@ -4,11 +4,20 @@
        xsi:schemaLocation="http://www.springframework.org/schema/beans
            http://www.springframework.org/schema/beans/spring-beans-3.0.xsd">
 
-	<!--
-	<bean id="rtpBroadcaster" class="org.linesofcode.videoServer.broadcast.RtpBroadcaster">
-		<constructor-arg index="0" value="1026"/>
-	</bean>
-	 -->
+	 <bean id="mongodb" class="org.linesofcode.videoServer.db.EmbeddedMongoDbProcess">
+	 	<property name="dataPath" value="./data" />
+	 	<property name="command" value="./bin/mongod" />
+	 	<property name="hostName" value="127.0.0.1" />
+	 	<property name="dbname" value="videodb" />
+	 	<property name="mongoPath" value="/home/jule/Downloads/mongodb-linux-x86_64-2.0.6/" />
+	 	<!-- <property name="port" value="27017" />  -->
+	 </bean>
+	 
+	 <bean id="broadcastDao" class="org.linesofcode.videoServer.db.BroadcastDaoMongoImpl" lazy-init="true" scope="prototype">
+	 	<constructor-arg index="0" ref="mongodb" />
+	 	<property name="collectionName" value="broadcasts" />
+	 </bean>
+	 
 	<bean id="videoServer" class="org.linesofcode.videoServer.VideoServer">
 		<property name="videoPath" value="./videoFiles" />
 		<property name="dataDir" value="./data" />
