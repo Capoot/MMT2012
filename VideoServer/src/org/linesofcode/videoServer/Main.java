@@ -16,7 +16,6 @@ public class Main {
 		ApplicationContext context = new ClassPathXmlApplicationContext(new String[]{"applicationContext.xml"});
 		final VideoServer videoServer = context.getBean("videoServer", VideoServer.class);
         final RestAPI restApi = context.getBean("restApi", RestAPI.class);
-        evalArgs(args, videoServer);
         addShutdownHook(videoServer,restApi);
 
         LOG.info("Starting video server...");
@@ -49,12 +48,8 @@ public class Main {
                 } catch (Exception e) {
                     LOG.error("Error while shutting down REST API.",  e);
                 }
+                LOG.info("Shutdown hook completed");
             }
         });
     }
-
-    private static void evalArgs(String[] args, VideoServer videoServer) {
-		// TODO evaluate arguments here
-	}
-	
 }
