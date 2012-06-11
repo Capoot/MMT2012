@@ -2,10 +2,8 @@
 <html lang="de">
 <head>
     <meta charset="utf-8">
-    <title>Bootstrap, from Twitter</title>
+    <title>videos</title>
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <meta name="description" content="">
-    <meta name="author" content="">
 
     <link href="style/bootstrap.css" rel="stylesheet">
     <style>
@@ -50,7 +48,7 @@
 
 <div class="container map">
     <div class="row map">
-        <div class="span6 map">
+        <div class="span12 map" id="videoMap">
             <div id="map_canvas"></div>
         </div>
         <div class="span6" id="video">
@@ -59,10 +57,9 @@
                 <a href="#">enlarge to fullscreen</a>
                 <br />
                 <video controls="controls">
-                    <source src="testData/video.mp4" type="video/mp4" />
-                    <source src="testData/video.ogv" type="video/ogg" />
                     Your browser does not support the video tag.
                 </video>
+                <button class="btn" id="closeVideo">Close</button>
             </div>
         </div>
     </div>
