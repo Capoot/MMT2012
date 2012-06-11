@@ -105,6 +105,7 @@ public class VideoUploadHandler implements HttpHandler {
 	}
 	
 	private void respondSuccessful(HttpExchange e) throws IOException {
+		e.getResponseHeaders().add("Access-Control-Allow-Origin", "*");
 		e.sendResponseHeaders(200, 0);
 	}
 	
