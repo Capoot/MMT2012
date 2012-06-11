@@ -29,6 +29,12 @@ public class VideoUploadHandler implements HttpHandler {
 	@Override
 	public void handle(HttpExchange e) throws IOException {
 		
+		if(e.getRequestMethod().toUpperCase().equals("OPTIONS")) {
+			respondSuccessful(e);
+			e.close();
+			return;
+		}
+		
 		if(!e.getRequestMethod().toUpperCase().equals("POST")) {
 			respondError(e, 405);
 			e.close();
