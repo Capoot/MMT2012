@@ -3,18 +3,19 @@ $(document).ready(function (){
     var app = new App();
 
     $("input[type=submit]").click(function(event){
+        $('#errorSpace').empty();
         if ($("#name").val() == "") {
-            alert("Title must be set");
+            errorMessage("Title must be set");
             event.preventDefault();
             return;
         }
         if ($("#video").val() == "") {
-            alert("Video must be selected");
+            errorMessage("Video must be selected");
             event.preventDefault();
             return;
         }
         if ($("#lat").val() == "" || $("#lng").val() == "") {
-            alert("Location must be chosen.");
+            errorMessage("Location must be chosen.");
             event.preventDefault();
             return;
         }
@@ -33,16 +34,27 @@ $(document).ready(function (){
             progress.css('width', percentComplete);
         },
         complete: function(xhr) {
-            console.log(xhr);
+            window.location.href = "./index.htm#upload";
         },
         error: function() {
-            alert("error");
+            errorMessage("upload failed");
             progress.hide();
             $('input').removeAttr('disabled');
             $('button').removeAttr('disabled');
         }
     });
 });
+
+function errorMessage(message) {
+
+    var inner = '<div class="alert alert-error">' +
+        '<a class="close" data-dismiss="alert" href="#">×</a>' +
+        '<h4 class="alert-heading">Error!</h4>' +
+        message +
+        '</div>';
+
+    $('#errorSpace').append(inner);
+}
 
 var App = function() {
     this.map = null;
