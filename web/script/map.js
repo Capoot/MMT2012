@@ -10,6 +10,15 @@ $(document).ready(function (){
         $('#video').hide();
         google.maps.event.trigger(app.map, "resize");
     });
+
+    if (window.location.hash == "#upload") {
+        var inner = '<div class="alert alert-success">' +
+            '<a class="close" data-dismiss="alert" href="#">×</a>' +
+            '<h4 class="alert-heading">Upload completed!</h4>' +
+            'Your video was uploaded successfully. it may take some minutes until it appear on the map.' +
+            '</div>';
+        $('#videoMap').prepend(inner);
+    }
 });
 
 var App = function() {
