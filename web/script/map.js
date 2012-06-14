@@ -45,14 +45,15 @@ var App = function() {
 
 App.prototype.tick = function() {
     var that = this;
-    jQuery.getJSON("http://localhost:8081/videos", function(data) {
+    //jQuery.getJSON("http://localhost:8081/videos", function(data) {
+    jQuery.getJSON("http://127.0.0.1//MMT2012/web/testData/cameras.json", function(data) {
 
         $.each(that.cameras, function(id, vals) {
             vals.dirty = true;
         });
 
         $.each(data, function(id, camera) {
-            that.updateCamera(id, camera.lat, camera.lng, camera.url);
+            that.updateCamera(id, camera.lat, camera.lng, camera.urls);
         });
 
         $.each(that.cameras, function(id, vals) {
@@ -81,7 +82,7 @@ App.prototype.showPosition = function(lat, lng) {
     this.map.setZoom(12);
 };
 
-App.prototype.updateCamera = function(id, lat, lng, url) {
+App.prototype.updateCamera = function(id, lat, lng, urls) {
 
     if (this.cameras[id] != undefined) {
         this.cameras[id].setPosition(new google.maps.LatLng(lat, lng));
@@ -96,7 +97,10 @@ App.prototype.updateCamera = function(id, lat, lng, url) {
             $('#videoMap').removeClass('span12');
             $('#videoMap').addClass('span6');
             $('#video').show();
-            $('#video video').attr('src', url);
+            $('#video video').empty();
+            $.each(urls, function(mime, url) {
+                $('#video video').append('<source src="'+url+'" type="'+mime+'" />');
+            });
         });
 
         this.cameras[id] = marker;

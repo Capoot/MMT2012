@@ -2,27 +2,11 @@
     "1" : {
         "lat" : 52,
         "lng" : 13,
-        "videos" : {
-            "eins" : {
-              "url": "http://127.0.0.1/MMT2012/web/testData/video",
-              "mime" : "bla"
-            }
+        "title" : "My video",
+        "urls" : {
+            "video/mp4"  : "http://127.0.0.1/MMT2012/web/testData/video.mp4",
+            "video/ogg"  : "http://127.0.0.1/MMT2012/web/testData/video.ogv",
+            "video/webm" : "http://127.0.0.1/MMT2012/web/testData/video.webm"
         }
-    },
-
-    "2" : {
-        "lat" : 51,
-        "lng" : 13,
-        "url" : "http://127.0.0.1/MMT2012/web/testData/video.mp4"
-    },
-    "3" : {
-        "lat" : 53,
-        "lng" : 13,
-        "url" : "http://127.0.0.1/MMT2012/web/testData/video.mp4"
-    },
-    "4" : {
-        "lat" : 52,
-        "lng" : 11,
-        "url" : "http://127.0.0.1/MMT2012/web/testData/video.mp4"
     }
 }
