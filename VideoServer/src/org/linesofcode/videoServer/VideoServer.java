@@ -53,13 +53,28 @@ public class VideoServer {
 		return new BufferedInputStream(fis);
 	}
 	
-	public void saveVideo(InputStream in, String id, double lat, double lng, String title, String ending) throws IOException, InterruptedException {
-		LOG.debug("Transcoding video lat: " + lat + "; long: " + lng + "; ID: " + id + " title: " + title + "; data present: " + (in != null));
-		String path = writeTemporaryVideoFileToDisk(in, id, ending);
-		transcode(path, id, "mp4", "");
-		addCast(new Broadcast(id, lat, lng, title));
-		deleteTemporaryVideoFile(path);
+	public void saveVideo(InputStream in, final String id, final double lat, final double lng, final String title, String ending) throws IOException, InterruptedException {
+		
+		LOG.debug("Saving video. lat: " + lat + "; long: " + lng + "; ID: " + id + " title: " + title + "; data present: " + (in != null));
+		final String path = writeTemporaryVideoFileToDisk(in, id, ending);
 		in.close();
+		
+		LOG.debug("Spawning thread...");
+		new Thread() {
+			@Override
+			public void run() {
+				try {
+					LOG.debug("Thread running");
+					transcode(path, id, "mp4", "");
+					addCast(new Broadcast(id, lat, lng, title));
+					deleteTemporaryVideoFile(path);
+					LOG.debug("Thread completed");
+				} catch (Exception e) {
+					LOG.error(e.getMessage());
+				}
+			}
+			
+		}.start();
 	}
 
 	private String writeTemporaryVideoFileToDisk(InputStream in, String id, String ending)

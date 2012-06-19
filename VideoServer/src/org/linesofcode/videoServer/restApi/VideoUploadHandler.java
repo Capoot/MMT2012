@@ -107,7 +107,7 @@ public class VideoUploadHandler implements HttpHandler {
 		try {
 			videoServer.saveVideo(data, id, lat, lng, title, ending);
 		} finally {
-			LOG.debug("Deleting temporary files...");
+			LOG.debug("Deleting temporary upload files...");
 			for(Object o : items) {
 				FileItem item = (FileItem)o;
 				item.delete();
