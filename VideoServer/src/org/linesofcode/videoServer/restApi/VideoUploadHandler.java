@@ -135,7 +135,8 @@ public class VideoUploadHandler implements HttpHandler {
 	
 	private boolean isFormatSupported(String format) {
 		String rawFormat = format.replace(".", "").toLowerCase();
-		return rawFormat.equals("avi") || rawFormat.equals("ogv") || rawFormat.equals("mp4");
+		return rawFormat.equals("avi") || rawFormat.equals("ogv")
+				|| rawFormat.equals("mp4") || rawFormat.equals("webm");
 	}
 	
 	private void respondSuccessful(HttpExchange e) throws IOException {

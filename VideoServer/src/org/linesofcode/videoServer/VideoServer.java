@@ -46,8 +46,8 @@ public class VideoServer {
 		return broadcastDao.listAll();
 	}
 	
-	public InputStream loadVideo(String videoId) throws IOException {
-		String path = String.format("%s/%s.mp4", videoPath, videoId);
+	public InputStream loadVideo(String videoFileName) throws IOException {
+		String path = String.format("%s/%s", videoPath, videoFileName);
 		File file = new File(path);
 		FileInputStream fis = new FileInputStream(file);
 		return new BufferedInputStream(fis);
@@ -64,16 +64,15 @@ public class VideoServer {
 			@Override
 			public void run() {
 				try {
-					LOG.debug("Thread running");
 					transcode(path, id, "mp4", "");
+					transcode(path, id, "ogv", "");
+					transcode(path, id, "webm", "");
 					addCast(new Broadcast(id, lat, lng, title));
 					deleteTemporaryVideoFile(path);
-					LOG.debug("Thread completed");
 				} catch (Exception e) {
 					LOG.error(e.getMessage());
 				}
 			}
-			
 		}.start();
 	}
 

@@ -86,14 +86,27 @@ public class VideoListHandler implements HttpHandler {
 		builder.append(String.format("\"%s\":{", cast.getId()));
 		builder.append(String.format("\"lat\":%s,", cast.getLattitude()));
 		builder.append(String.format("\"lng\":%s,", cast.getLongitude()));
-		builder.append(String.format("\"url\":\"%s\",", makeUrl(cast)));
+		builder.append(String.format("\"urls\":{%s},", makeUrls(cast)));
 		builder.append(String.format("\"title\":\"%s\"", cast.getTitle()));
 		builder.append("}");
 		return builder.toString();
 	}
 	
-	private Object makeUrl(Broadcast cast) {
-		return String.format("http://%s/watch/%s", hostPort, cast.getId());
+	private String makeUrls(Broadcast cast) {
+		
+		String[] extensions = new String[] { "mp4", "ogv", "webm" };
+		StringBuilder buffer = new StringBuilder();
+		
+		for(int i=0; i<extensions.length; i++) {
+			buffer.append(String.format("\"video/%s\"", extensions[i]));
+			buffer.append(":");
+			buffer.append(String.format("\"http://%s/watch/%s.%s\"", hostPort, cast.getId(), extensions[i]));
+			if(i < extensions.length -1) {
+				buffer.append(",");
+			}
+		}
+		
+		return buffer.toString();
 	}
 	
 	public String getResponseEncoding() {
