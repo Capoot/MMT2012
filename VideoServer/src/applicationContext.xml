@@ -19,8 +19,11 @@
 	 </bean>
 	 
 	<bean id="videoServer" class="org.linesofcode.videoServer.VideoServer">
-		<property name="videoPath" value="./videoFiles" />
-		<property name="dataDir" value="./data" />
+		<property name="videoPath" value="videoFiles" />
+		<property name="dataDir" value="data" />
+		<property name="tempDir" value="tempFiles" />
+		<property name="ffmpegCmd" value="ffmpeg" />
+		<property name="ffmpegOptionsArg" value="" />
 	</bean>
 	
 	<bean id="videoListHandler" class="org.linesofcode.videoServer.restApi.VideoListHandler">
@@ -45,7 +48,7 @@
 		<property name="uploadContextName" value="/upload" />
 		<property name="port" value="8081" />
 		<property name="hostName" value="localhost" />
-		<property name="uploadTempDir" value="./uploadedTempFiles" />
+		<property name="uploadTempDir" value="./tempFiles" />
 	</bean>
 	
 </beans>

@@ -11,6 +11,7 @@ import org.apache.commons.fileupload.FileUpload;
 import org.apache.commons.fileupload.FileUploadException;
 import org.apache.log4j.Logger;
 import org.linesofcode.videoServer.VideoServer;
+import org.linesofcode.videoServer.restApi.exception.UnsupportedFormatException;
 
 import com.sun.net.httpserver.HttpExchange;
 import com.sun.net.httpserver.HttpHandler;
@@ -47,19 +48,23 @@ public class VideoUploadHandler implements HttpHandler {
 			respondSuccessful(e);
 		}catch(IOException ex) {
 			LOG.error("I/O Error while handling HTTP Request: " + ex.getMessage());
-			throw ex;
+			respondError(e, 500, ex);
 		} catch(NumberFormatException ex) {
 			LOG.error("Error Reading number field: " + ex.getMessage());
 			respondError(e, 400, ex);
+		} catch(UnsupportedFormatException ex) {
+			LOG.debug("discarded upload with unsupported format: " + ex.getFormat());
+			respondError(e, 415, ex);
 		} catch(Exception ex) {
 			LOG.error("Unexpected error while handling HTTP Request: " + ex);
+			ex.printStackTrace();
 			respondError(e, 500, ex);
 		} finally {
 			e.close();
 		}
 	}
 
-	private void processRequest(HttpExchange e) throws IOException, FileUploadException {
+	private void processRequest(HttpExchange e) throws IOException, FileUploadException, InterruptedException {
 		FileUpload upload = new FileUpload(new LightweightFileItemFactory(tempDir));
 		@SuppressWarnings("rawtypes")
 		List items = upload.parseRequest(new LightweightHttpRequestContext(e));
@@ -69,12 +74,15 @@ public class VideoUploadHandler implements HttpHandler {
 		double lng = 0.0;
 		InputStream data = null;
 		String title = null;
+		String ending = null;
 		
 		for(Object o : items) {
 			FileItem item = (FileItem)o;
 			if(item.getFieldName().toLowerCase().equals("video")) {
 				data = item.getInputStream();
-				id = makeId(item.getName());
+				String fileName = item.getName();
+				id = makeId(fileName);
+				ending = extractEnding(fileName);
 				continue;
 			}
 			if(item.getFieldName().toLowerCase().equals("lat")) {
@@ -90,10 +98,14 @@ public class VideoUploadHandler implements HttpHandler {
 			}
 		}
 		
+		if(!isFormatSupported(ending)) {
+			throw new UnsupportedFormatException(ending);
+		}
+		
 		// TODO the following operations could be threaded
 		// TODO we could send positive response before processing
 		try {
-			videoServer.saveVideo(data, id, lat, lng, title);
+			videoServer.saveVideo(data, id, lat, lng, title, ending);
 		} finally {
 			LOG.debug("Deleting temporary files...");
 			for(Object o : items) {
@@ -103,11 +115,27 @@ public class VideoUploadHandler implements HttpHandler {
 		}
 	}
 
+	private String extractEnding(String string) {
+		StringBuilder buffer = new StringBuilder();
+		for(int i=string.length()-1; i>=0; i--) {
+			buffer.append(string.charAt(i));
+			if(string.charAt(i) == '.') {
+				break;
+			}
+		}
+		return buffer.reverse().toString().toLowerCase();
+	}
+
 	private String makeId(String name) {
 		Random r = new Random();
 		r.setSeed(System.currentTimeMillis());
 		String cleanName = name.toLowerCase().replace(" ", "").replace(".", "");
 		return String.format("%s%d", cleanName, Math.abs(r.nextInt()));
+	}
+	
+	private boolean isFormatSupported(String format) {
+		String rawFormat = format.replace(".", "").toLowerCase();
+		return rawFormat.equals("avi") || rawFormat.equals("ogv") || rawFormat.equals("mp4");
 	}
 	
 	private void respondSuccessful(HttpExchange e) throws IOException {
@@ -120,11 +148,11 @@ public class VideoUploadHandler implements HttpHandler {
 	}
 	
 	private void respondError(HttpExchange e, int code, Exception cause) throws IOException {
+		e.getResponseHeaders().add("Content-Encoding", System.getProperty("file.encoding"));
+		e.getResponseHeaders().add("Content-Type", "text/plain");
 		respondError(e, code);
 		PrintWriter out = new PrintWriter(e.getResponseBody(), true);
 		out.println(cause.getMessage());
-		// TODO stack trace printing only if configured
-		cause.printStackTrace();
 	}
 
 	public void setTempDir(String uploadTempDir) {
