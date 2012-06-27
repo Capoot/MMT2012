@@ -4,12 +4,9 @@
        xsi:schemaLocation="http://www.springframework.org/schema/beans
            http://www.springframework.org/schema/beans/spring-beans-3.0.xsd">
 
-	 <bean id="mongodb" class="org.linesofcode.videoServer.db.EmbeddedMongoDbProcess">
-	 	<property name="dataPath" value="./data" />
-	 	<property name="command" value="./bin/mongod" />
+	 <bean id="mongodb" class="org.linesofcode.videoServer.db.MongoDbConnector">
 	 	<property name="hostName" value="127.0.0.1" />
 	 	<property name="dbname" value="videodb" />
-	 	<property name="mongoPath" value="/home/jule/Downloads/mongodb-linux-x86_64-2.0.6/" />
 	 	<!-- <property name="port" value="27017" />  -->
 	 </bean>
 	 

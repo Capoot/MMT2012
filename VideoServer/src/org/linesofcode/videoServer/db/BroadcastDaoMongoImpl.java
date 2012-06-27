@@ -22,7 +22,7 @@ public class BroadcastDaoMongoImpl implements BroadcastDao {
 	private DBCollection collection;
 	private String collectionName = "videos";
 	
-	public BroadcastDaoMongoImpl(EmbeddedMongoDbProcess p) {
+	public BroadcastDaoMongoImpl(MongoDbConnector p) {
 		DB db = p.getDb();
 		if(!db.collectionExists(collectionName)) {
 			LOG.debug("Collection "  + collectionName + " does not exist. Initializing...");

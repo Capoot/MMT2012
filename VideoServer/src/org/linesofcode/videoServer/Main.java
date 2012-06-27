@@ -2,7 +2,7 @@ package org.linesofcode.videoServer;
 
 import org.apache.log4j.Logger;
 import org.linesofcode.videoServer.db.BroadcastDao;
-import org.linesofcode.videoServer.db.EmbeddedMongoDbProcess;
+import org.linesofcode.videoServer.db.MongoDbConnector;
 import org.linesofcode.videoServer.restApi.RestAPI;
 import org.springframework.context.ApplicationContext;
 import org.springframework.context.support.ClassPathXmlApplicationContext;
@@ -18,7 +18,7 @@ public class Main {
 		ApplicationContext context = new ClassPathXmlApplicationContext(new String[]{"applicationContext.xml"});
 		final VideoServer videoServer = context.getBean("videoServer", VideoServer.class);
         final RestAPI restApi = context.getBean("restApi", RestAPI.class);
-        final EmbeddedMongoDbProcess mongo = context.getBean("mongodb", EmbeddedMongoDbProcess.class);
+        final MongoDbConnector mongo = context.getBean("mongodb", MongoDbConnector.class);
         addShutdownHook(videoServer, restApi, mongo);
         
         LOG.info("Starting embedded MongoDB...");
@@ -47,7 +47,7 @@ public class Main {
 		}
 	}
 
-    private static void addShutdownHook(final VideoServer videoServer, final RestAPI restApi, final EmbeddedMongoDbProcess mongo) {
+    private static void addShutdownHook(final VideoServer videoServer, final RestAPI restApi, final MongoDbConnector mongo) {
         Runtime.getRuntime().addShutdownHook(new Thread() {
             @Override
             public void run() {
