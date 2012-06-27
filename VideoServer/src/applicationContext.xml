@@ -20,7 +20,6 @@
 		<property name="dataDir" value="data" />
 		<property name="tempDir" value="tempFiles" />
 		<property name="ffmpegCmd" value="ffmpeg" />
-		<property name="ffmpegOptionsArg" value="" />
 	</bean>
 	
 	<bean id="videoListHandler" class="org.linesofcode.videoServer.restApi.VideoListHandler">
