@@ -22,6 +22,15 @@ $(document).ready(function (){
 });
 
 var App = function() {
+    var url = window.location.pathname.replace(/\\/g,'/').replace(/\/[^\/]*$/, '');
+    var that = this;
+    $.getJSON(url + '/config.json', function(data) {
+        that.videoServer = data.videoServer;
+        that.initialize();
+    });
+};
+
+App.prototype.initialize = function() {
     this.map = null;
     this.initialLocation = new google.maps.LatLng(52, 13);
     this.cameras = {};
@@ -45,8 +54,7 @@ var App = function() {
 
 App.prototype.tick = function() {
     var that = this;
-    //jQuery.getJSON("http://localhost:8081/videos", function(data) {
-    jQuery.getJSON("http://127.0.0.1//MMT2012/web/testData/cameras.json", function(data) {
+    jQuery.getJSON(this.videoServer + "/videos", function(data) {
 
         $.each(that.cameras, function(id, vals) {
             vals.dirty = true;

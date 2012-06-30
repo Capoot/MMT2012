@@ -1,6 +1,20 @@
 
+var videoServer = '';
+
 $(document).ready(function (){
+    var url = window.location.pathname.replace(/\\/g,'/').replace(/\/[^\/]*$/, '');
+    var that = this;
+    $.getJSON(url + '/config.json', function(data) {
+        videoServer = data.videoServer;
+        configLoaded();
+    });
+
+});
+
+function configLoaded() {
     var app = new App();
+
+    $('form').attr('action', videoServer + '/upload');
 
     $("input[type=submit]").click(function(event){
         $('#errorSpace').empty();
@@ -24,8 +38,11 @@ $(document).ready(function (){
     var progress = $('.progress');
     progress.hide();
 
+    var error = false;
+
     $("form").ajaxForm({
         beforeSend: function() {
+            error = false;
             progress.show();
             $('input').attr('disabled', 'disabled');
             $('button').attr('disabled', 'disabled');
@@ -34,16 +51,19 @@ $(document).ready(function (){
             progress.css('width', percentComplete);
         },
         complete: function(xhr) {
-            window.location.href = "./index.htm#upload";
+            if (!error) {
+                window.location.href = "./index.htm#upload";
+            }
         },
         error: function() {
+            error = true;
             errorMessage("upload failed");
             progress.hide();
             $('input').removeAttr('disabled');
             $('button').removeAttr('disabled');
         }
     });
-});
+}
 
 function errorMessage(message) {
 
